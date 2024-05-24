@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ThingSpeak Data Display</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
+
+      .navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+      }
+
+      .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .navbar li {
+        float: right;
+      }
+
+      .navbar li a {
+        display: block;
+        color: #fff;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+
+      .navbar .icon {
+        display: block;
+        float: left;
+        padding-right: 10px;
+      }
+      .navbar li img {
+        border-radius: 45%;
+      }
+
+      .navbar li a:hover {
+        background-color: #555;
+      }
+
+      .navbar li.active a {
+        background-color: #4caf50;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .data-frame {
+        width: 700px;
+        height: 300px;
+        border: none;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li class="icon">
+          <img src="logo3.png" alt="Icon" width="50" height="50" />
+        </li>
+        <li><a href="5.html">Water Consumption</a></li>
+        <li><a href="4.html">Dashboard</a></li>
+        <li class="active"><a href="2.html">Display Data</a></li>
+        <li><a href="1.html">Home</a></li>
+      </ul>
+    </div>
+    <div class="container">
+      <h1>ThingSpeak Data Display</h1>
+      <iframe
+        class="data-frame"
+        src="https://api.thingspeak.com/channels/2165262/charts/1?api_key=PFWYRJ7UNRNRMFMQ"
+      ></iframe>
+      <iframe
+        class="data-frame"
+        src="https://api.thingspeak.com/channels/2165262/charts/2?api_key=PFWYRJ7UNRNRMFMQ"
+      ></iframe>
+      <iframe
+        class="data-frame"
+        src="https://api.thingspeak.com/channels/2165262/charts/3?api_key=PFWYRJ7UNRNRMFMQ"
+      ></iframe>
+    </div>
+  </body>
+</html>

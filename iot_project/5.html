@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Automatic Flush System - Water Conservation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+      }
+      .navbar {
+        background-color: #333;
+        color: #df99be;
+        padding: 10px;
+      }
+
+      .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .navbar li {
+        float: right;
+      }
+
+      .navbar li a {
+        display: block;
+        color: #fff;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+
+      .navbar .icon {
+        display: block;
+        float: left;
+        padding-right: 10px;
+      }
+
+      .navbar li img {
+        border-radius: 45%;
+      }
+
+      .navbar li a:hover {
+        background-color: #555;
+      }
+
+      .navbar li.active a {
+        background-color: #4caf50;
+      }
+
+      main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      h3 {
+        margin-top: 0;
+      }
+
+      #water-usage {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      #chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li class="icon">
+          <img src="logo3.png" alt="Icon" width="50" height="50" />
+        </li>
+        <li class="active"><a href="5.html">Water Consumption</a></li>
+        <li><a href="4.html">Dashboard</a></li>
+        <li><a href="2.html">Display Data</a></li>
+        <li><a href="1.html">Home</a></li>
+      </ul>
+    </div>
+    <br />
+    <header>
+      <h1>Automatic Flush System - Water Conservation</h1>
+      <h2>Efficient Flushing for Water Conservation</h2>
+    </header>
+
+    <main>
+      <section>
+        <h3>Real-Time Water Usage Data</h3>
+        <div id="water-usage"></div>
+      </section>
+
+      <section>
+        <h3>Water Consumption Chart</h3>
+        <div id="chart-container">
+          <canvas id="water-consumption-chart"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Fetch data from ThingSpeak and update HTML content
+      // ...
+
+      // Create and update the water consumption chart
+      function createChart(data) {
+        const ctx = document
+          .getElementById("water-consumption-chart")
+          .getContext("2d");
+
+        const chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: "Water Consumption",
+                data: data.values,
+                borderColor: "blue",
+                backgroundColor: "rgba(0, 0, 255, 0.1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                display: true,
+                title: {
+                  display: true,
+                  text: "Time",
+                },
+              },
+              y: {
+                display: true,
+                title: {
+                  display: true,
+                  text: "Water Consumption",
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Fetch data from ThingSpeak and update HTML content
+      // ...
+
+      // Fetch data initially on page load
+      window.addEventListener("load", () => {
+        fetchWaterUsageData();
+        fetchWaterConsumptionChartData();
+      });
+
+      // Fetch water consumption chart data from ThingSpeak
+      function fetchWaterConsumptionChartData() {
+        const channelID = "YOUR_CHANNEL_ID";
+        const apiKey = "YOUR_API_KEY";
+        const url = `https://api.thingspeak.com/channels/${channelID}/charts/1?api_key=${apiKey}&results=7`;
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            const chartData = {
+              labels: data.labels,
+              values: data.series[0].data,
+            };
+
+            createChart(chartData);
+          })
+          .catch((error) => console.error(error));
+      }
+    </script>
+  </body>
+</html>

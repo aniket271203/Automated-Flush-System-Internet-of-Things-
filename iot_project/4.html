@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Automatic Flush System Dashboard</title>
+    <style>
+      /* CSS styling for the dashboard */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .navbar {
+        background-color: #333;
+        color: #df99be;
+        padding: 10px;
+      }
+
+      .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .navbar li {
+        float: right;
+      }
+
+      .navbar li a {
+        display: block;
+        color: #fff;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+
+      .navbar .icon {
+        display: block;
+        float: left;
+        padding-right: 10px;
+      }
+
+      .navbar li img {
+        border-radius: 45%;
+      }
+
+      .navbar li a:hover {
+        background-color: #555;
+      }
+
+      .navbar li.active a {
+        background-color: #4caf50;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-top: 0;
+      }
+
+      .summary {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .summary-item {
+        flex-basis: 30%;
+        text-align: center;
+        padding: 10px;
+        background-color: #f1f1f1;
+        color: #333;
+        border-radius: 4px;
+      }
+
+      .chart {
+        height: 300px;
+        margin-bottom: 20px;
+        background-color: #f1f1f1;
+      }
+
+      .status {
+        margin-bottom: 20px;
+      }
+
+      .status p {
+        margin: 5px 0;
+      }
+
+      .status span {
+        font-weight: bold;
+      }
+
+      .notifications {
+        margin-bottom: 20px;
+      }
+
+      .notifications h2 {
+        margin-bottom: 10px;
+      }
+
+      .notifications ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .notifications li {
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color: #f9f9f9;
+      }
+
+      .quick-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .quick-actions a {
+        padding: 10px 20px;
+        background-color: #f1f1f1;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+
+      .additional-info {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li class="icon">
+          <img src="logo3.png" alt="Icon" width="50" height="50" />
+        </li>
+        <li><a href="5.html">Water Consumption</a></li>
+        <li class="active"><a href="4.html">Dashboard</a></li>
+        <li><a href="2.html">Display Data</a></li>
+        <li><a href="1.html">Home</a></li>
+      </ul>
+    </div>
+    <div class="container">
+      <h1>Automatic Flush System Dashboard</h1>
+
+      <div class="summary">
+        <div class="summary-item">
+          <h2>Total Flushes Today:</h2>
+          <p id="flushes"></p>
+        </div>
+        <div class="summary-item">
+          <h2>Water Consumption Today:</h2>
+          <p id="water"></p>
+        </div>
+        <div class="summary-item">
+          <h2>Current Issues:</h2>
+          <p id="issues"></p>
+        </div>
+      </div>
+
+      <div class="chart">
+        <!-- Insert your real-time data chart here -->
+      </div>
+
+      <div class="status">
+        <h2>System Status</h2>
+        <p>Sensor Status: <span id="sensor-status">OK</span></p>
+        <p>Battery Level: <span id="battery-level">90%</span></p>
+        <p>Connection Status: <span id="connection-status">Connected</span></p>
+      </div>
+
+      <div class="notifications">
+        <h2>Notifications</h2>
+        <ul id="issue-list">
+          <!-- Insert your recent issues list dynamically here -->
+        </ul>
+      </div>
+
+      <div class="quick-actions">
+        <a href="1.html">Adjust Thresholds</a>
+        <a href="3.html">Maintenance Schedule</a>
+        <a href="#">Settings</a>
+      </div>
+
+      <div class="additional-info">
+        <p>Help & Support: <a href="#">Support Center</a></p>
+        <p>Contact Information: [Contact Details]</p>
+      </div>
+    </div>
+
+    <!-- JavaScript code to update the dynamic data -->
+    <script>
+      var flushesToday = 25;
+      var waterConsumptionToday = 1000;
+      var currentIssues = 2;
+
+      // Sample data for demonstration
+      fetch(`http://192.168.243.249:80/get-flush-data`)
+        .then((res) => res.json())
+        .then((res) => {
+          document.getElementById("flushes").textContent = res["flushes"];
+          document.getElementById("water").textContent = res["water-consumed"];
+          document.getElementById("issues").textContent = currentIssues;
+        });
+
+      // Update the dynamic data on the page
+    </script>
+  </body>
+</html>

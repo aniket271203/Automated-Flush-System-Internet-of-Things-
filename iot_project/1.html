@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .navbar {
+        background-color: #333;
+        color: #df99be;
+        padding: 10px;
+      }
+
+      .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .navbar li {
+        float: right;
+      }
+
+      .navbar li a {
+        display: block;
+        color: #fff;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+
+      .navbar .icon {
+        display: block;
+        float: left;
+        padding-right: 10px;
+      }
+
+      .navbar li img {
+        border-radius: 45%;
+      }
+
+      .navbar li a:hover {
+        background-color: #555;
+      }
+
+      .navbar li.active a {
+        background-color: #4caf50;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .settings,
+      .system-status {
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .settings h2,
+      .system-status h2 {
+        margin-top: 0;
+        color: #333;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      #status-message {
+        font-weight: bold;
+        color: #333;
+      }
+
+      #last-flush-time,
+      #water-consumption {
+        margin-top: 10px;
+        color: #333;
+      }
+      .alerts {
+        margin-top: 20px;
+      }
+
+      .alerts h2 {
+        margin-top: 0;
+        color: #333;
+      }
+
+      .alert {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .success {
+        background-color: #c8e6c9;
+        color: #388e3c;
+      }
+
+      .warning {
+        background-color: #ffcc80;
+        color: #f57c00;
+      }
+
+      .error {
+        background-color: #ffcdd2;
+        color: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li class="icon">
+          <img src="logo3.png" alt="Icon" width="50" height="50" />
+        </li>
+        <li><a href="5.html">Water Consumption</a></li>
+        <li><a href="4.html">Dashboard</a></li>
+        <li><a href="2.html">Display Data</a></li>
+        <li class="active"><a href="1.html">Home</a></li>
+      </ul>
+    </div>
+
+    <div class="container">
+      <h1>System</h1>
+
+      <div class="settings">
+        <h2>System Settings</h2>
+        <label for="flush-delay">Flush Delay (seconds):</label>
+        <input type="number" id="flush-delay" min="0" step="1" value="5" />
+
+        <label for="freshener-interval"
+          >Air Freshener Interval (minutes):</label
+        >
+        <input
+          type="number"
+          id="freshener-interval"
+          min="1"
+          step="1"
+          value="10"
+        />
+
+        <label for="water-control">Water Consumption Control:</label>
+        <select id="water-control">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <button id="save-settings-btn">Save Settings</button>
+      </div>
+
+      <div class="system-status">
+        <h2>System Status</h2>
+        <p id="status-message">System is online</p>
+        <p id="last-flush-time">Last Flush: N/A</p>
+        <p id="water-consumption">Water Consumption: N/A</p>
+        <button id="simulate-flush-btn">Simulate Flush</button>
+        <br />
+        <button id="simulate-Air-Freshner">Release Air Freshner</button>
+      </div>
+      <div class="alerts">
+        <h2>Alerts and Notifications</h2>
+        <div id="alert-container"></div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let content = "none";
+
+        function handleContentType(response) {
+          const contentType = response.headers.get("content-type");
+
+          if (contentType.startsWith("application/json;")) {
+            content = "json";
+            return response.json();
+          } else if (contentType.startsWith("text/plain;")) {
+            content = "text";
+            return response.text();
+          }
+        }
+
+        const WriteKey = "I9PATI2WSPB0F784";
+        const flushDelayInput = document.getElementById("flush-delay");
+        const freshenerIntervalInput =
+          document.getElementById("freshener-interval");
+        const waterControlSelect = document.getElementById("water-control");
+        const saveSettingsBtn = document.getElementById("save-settings-btn");
+        const simulateFlushBtn = document.getElementById("simulate-flush-btn");
+        const simulateFreshenerBtn = document.getElementById(
+          "simulate-Air-Freshner"
+        ); // New button
+        const alertContainer = document.getElementById("alert-container");
+        const lastFlushTime = document.getElementById("last-flush-time");
+
+        saveSettingsBtn.addEventListener("click", function () {
+          // Save settings logic here
+
+          // Example code to display a success message
+          displayAlert("Settings saved successfully!", "success");
+        });
+
+        simulateFlushBtn.addEventListener("click", function () {
+          // Simulate flush logic here
+          let prev_flush = document.getElementById("last-flush-time").innerText;
+          let prev_water =
+            document.getElementById("water-consumption").innerText;
+          document.getElementById("last-flush-time").innerText =
+            "Last Flush: Updating data..";
+          document.getElementById("water-consumption").innerText =
+            "Water Consumption: Updating data..";
+
+          fetch(
+            `https://api.thingspeak.com/update?api_key=${WriteKey}&field2=1`
+          ).then((res) => console.log(res));
+
+          fetch(`http://192.168.243.249:80/flush`)
+            .then((res) => res.json())
+            .then((res) => {
+              if (res["flush-ready"]) {
+                updateLastFlushTime();
+                document.getElementById("water-consumption").innerText =
+                  "Water Consumption: " + res["flushed"] + " litres";
+                console.log(res);
+                displayAlert("Flush simulated successfully!", "success");
+              } else {
+                document.getElementById("last-flush-time").innerText =
+                  prev_flush;
+                document.getElementById("water-consumption").innerText =
+                  prev_water;
+                console.log(res);
+                displayAlert("Flush not ready!", "error");
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+
+        simulateFreshenerBtn.addEventListener("click", function () {
+          // Simulate air freshener release logic here
+          let prev_flush = document.getElementById("last-flush-time").innerText;
+          let prev_water =
+            document.getElementById("water-consumption").innerText;
+          document.getElementById("last-flush-time").innerText =
+            "Last Flush: Updating data..";
+          document.getElementById("water-consumption").innerText =
+            "Water Consumption: Updating data..";
+
+          fetch(
+            `https://api.thingspeak.com/update?api_key=${WriteKey}&field3=1`
+          ).then((res) => console.log(res));
+
+          fetch(`http://192.168.243.249:80/fresh`)
+            .then((res) => res.json())
+            .then((res) => {
+              if (res["fresh"]) {
+                // document.getElementById("last-flush-time").innerText =
+                //   prev_flush;
+                // document.getElementById("water-consumption").innerText =
+                //   prev_water;
+                console.log(res);
+                displayAlert("Air freshener released successfully!", "success");
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+
+        // Rest of the code...
+
+        // Function to generate and display an alert
+        function displayAlert(message, type) {
+          const alertElement = document.createElement("div");
+          alertElement.classList.add("alert");
+          alertElement.classList.add(type);
+          alertElement.textContent = message;
+          alertContainer.appendChild(alertElement);
+        }
+
+        // Function to update the last flush time
+        function updateLastFlushTime() {
+          const currentDate = new Date();
+          const formattedDate = currentDate.toLocaleString();
+
+          lastFlushTime.textContent = "Last Flush: " + formattedDate;
+        }
+
+        // Check conditions periodically
+        setInterval(checkWaterLevel, 5000); // Every 5 seconds
+        // setInterval(checkSensorStatus, 10000); // Every 10 seconds
+        setInterval(checkFreshenerRefill, 15000); // Every 15 seconds
+      });
+    </script>
+  </body>
+</html>
